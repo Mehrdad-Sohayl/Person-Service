@@ -76,6 +76,66 @@ public class GrpcPersonService : PersonService.PersonServiceBase
         }
     }
 
+    public override async Task<Person> Update(
+        UpdatePersonRequest request,
+        ServerCallContext context)
+    {
+        try
+        {
+            var command = new UpdatePersonCommand(
+                GrpcExtensions.ToGuidOrThrow(request.Person.Id),
+                request.Person.FirstName,
+                request.Person.LastName,
+                request.Person.NationalCode,
+                request.Person.BirthDate.ToDateTime()
+            );
+
+            var result = await _mediator.Send(command, context.CancellationToken);
+
+            if (result == null)
+                throw new RpcException(new Status(StatusCode.NotFound,
+                    $"Person with Id={request.Person.Id} not found"));
+
+            return ToProto(result);
+        }
+        catch (DomainValidationException ex)
+        {
+            _logger.LogWarning(ex, "UpdatePerson validation failed");
+            throw new RpcException(new Status(StatusCode.InvalidArgument,
+                string.Join("; ", ex.Errors)));
+        }
+        catch (RpcException) { throw; }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error in UpdatePerson");
+            throw new RpcException(new Status(StatusCode.Internal,
+                "Internal server error"));
+        }
+    }
+
+    public override async Task<Empty> Delete(
+        DeletePersonRequest request,
+        ServerCallContext context)
+    {
+        try
+        {
+            var command = new DeletePersonCommand
+            {
+                Id = GrpcExtensions.ToGuidOrThrow(request.Id)
+            };
+
+            await _mediator.Send(command, context.CancellationToken);
+            return new Empty();
+        }
+        catch (RpcException) { throw; }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error in DeletePerson");
+            throw new RpcException(new Status(StatusCode.Internal,
+                "Internal server error"));
+        }
+    }
+
     private static ProtoPerson ToProto(Domain.Entities.Person entity) => new ProtoPerson
     {
         Id = entity.Id.ToString(),
@@ -85,3 +145,4 @@ public class GrpcPersonService : PersonService.PersonServiceBase
         BirthDate = entity.BirthDate.Value.ToTimestamp()
     };
 }
+
