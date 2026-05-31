@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.6.11819.183
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonService.Application", "PersonService.Application\PersonService.Application.csproj", "{6655E412-85C5-4889-89CA-E26F12461E8E}"
 EndProject
@@ -10,6 +10,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonService.Infrastructure", "PersonService.Infrastructure\PersonService.Infrastructure.csproj", "{3D07D276-E548-4036-A679-41F41A528A91}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonService.Api", "PersonService.Api\PersonService.Api.csproj", "{D2DF1FE0-12AF-44CA-ACA3-D7FA94119EBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonService.Contracts", "PersonService.Contracts\PersonService.Contracts.csproj", "{E7DFB97C-1B01-4F57-82C4-57283D01B400}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonService.Client.Api", "PersonService.Client.Api\PersonService.Client.Api.csproj", "{694C12B9-FD23-4391-983B-6E95AADC0440}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +73,30 @@ Global
 		{D2DF1FE0-12AF-44CA-ACA3-D7FA94119EBA}.Release|x64.Build.0 = Release|Any CPU
 		{D2DF1FE0-12AF-44CA-ACA3-D7FA94119EBA}.Release|x86.ActiveCfg = Release|Any CPU
 		{D2DF1FE0-12AF-44CA-ACA3-D7FA94119EBA}.Release|x86.Build.0 = Release|Any CPU
+		{E7DFB97C-1B01-4F57-82C4-57283D01B400}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7DFB97C-1B01-4F57-82C4-57283D01B400}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7DFB97C-1B01-4F57-82C4-57283D01B400}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E7DFB97C-1B01-4F57-82C4-57283D01B400}.Debug|x64.Build.0 = Debug|Any CPU
+		{E7DFB97C-1B01-4F57-82C4-57283D01B400}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E7DFB97C-1B01-4F57-82C4-57283D01B400}.Debug|x86.Build.0 = Debug|Any CPU
+		{E7DFB97C-1B01-4F57-82C4-57283D01B400}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7DFB97C-1B01-4F57-82C4-57283D01B400}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7DFB97C-1B01-4F57-82C4-57283D01B400}.Release|x64.ActiveCfg = Release|Any CPU
+		{E7DFB97C-1B01-4F57-82C4-57283D01B400}.Release|x64.Build.0 = Release|Any CPU
+		{E7DFB97C-1B01-4F57-82C4-57283D01B400}.Release|x86.ActiveCfg = Release|Any CPU
+		{E7DFB97C-1B01-4F57-82C4-57283D01B400}.Release|x86.Build.0 = Release|Any CPU
+		{694C12B9-FD23-4391-983B-6E95AADC0440}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{694C12B9-FD23-4391-983B-6E95AADC0440}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{694C12B9-FD23-4391-983B-6E95AADC0440}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{694C12B9-FD23-4391-983B-6E95AADC0440}.Debug|x64.Build.0 = Debug|Any CPU
+		{694C12B9-FD23-4391-983B-6E95AADC0440}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{694C12B9-FD23-4391-983B-6E95AADC0440}.Debug|x86.Build.0 = Debug|Any CPU
+		{694C12B9-FD23-4391-983B-6E95AADC0440}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{694C12B9-FD23-4391-983B-6E95AADC0440}.Release|Any CPU.Build.0 = Release|Any CPU
+		{694C12B9-FD23-4391-983B-6E95AADC0440}.Release|x64.ActiveCfg = Release|Any CPU
+		{694C12B9-FD23-4391-983B-6E95AADC0440}.Release|x64.Build.0 = Release|Any CPU
+		{694C12B9-FD23-4391-983B-6E95AADC0440}.Release|x86.ActiveCfg = Release|Any CPU
+		{694C12B9-FD23-4391-983B-6E95AADC0440}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

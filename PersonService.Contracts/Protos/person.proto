@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option csharp_namespace = "PersonService.Contracts";
+
+import "google/protobuf/timestamp.proto";
+
+message Person {
+  string id            = 1;
+  string first_name    = 2;
+  string last_name     = 3;
+  string national_code = 4;
+  google.protobuf.Timestamp birth_date = 5;
+}
+
+message CreatePersonRequest { 
+	string first_name = 1;
+	string last_name = 2;
+	string national_code = 3;
+	google.protobuf.Timestamp birth_date = 4;
+}
+
+message GetPersonByIdRequest { string id = 1; }
+message UpdatePersonRequest { Person person = 1; }
+message DeletePersonRequest { string id = 1; }
+
+message Empty {}
+
+message PersonResponse {
+	string id = 1;
+	string first_name = 2;
+	string last_name = 3;
+	string national_code = 4;
+	google.protobuf.Timestamp birth_date = 5;
+}
+
+service PersonCrudService {
+  rpc Create(CreatePersonRequest) returns (PersonResponse);
+  rpc GetById(GetPersonByIdRequest) returns (PersonResponse);
+  rpc Update(UpdatePersonRequest) returns (PersonResponse);
+  rpc Delete(DeletePersonRequest) returns (Empty);
+}
