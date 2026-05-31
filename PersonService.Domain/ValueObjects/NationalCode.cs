@@ -4,6 +4,8 @@ public sealed class NationalCode : IEquatable<NationalCode>
 {
     public string Value { get; }
 
+    private NationalCode() { }
+
     public NationalCode(string value)
     {
         if (string.IsNullOrWhiteSpace(value))

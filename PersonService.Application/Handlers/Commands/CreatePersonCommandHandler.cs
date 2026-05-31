@@ -18,6 +18,7 @@ public class CreatePersonCommandHandler : IRequestHandler<CreatePersonCommand, P
     public async Task<Person> Handle(CreatePersonCommand request, CancellationToken ct)
     {
         var entity = PersonFactory.Create(
+            id: null,
             firstName: request.FirstName,
             lastName: request.LastName,
             nationalCode: request.NationalCode,

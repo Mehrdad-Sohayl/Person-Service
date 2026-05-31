@@ -4,6 +4,8 @@ public sealed class Name : IEquatable<Name>
 {
     public string Value { get; }
 
+    private Name() { }
+
     public Name(string value)
     {
         if (string.IsNullOrWhiteSpace(value))

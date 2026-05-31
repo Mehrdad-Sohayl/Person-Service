@@ -4,6 +4,8 @@ public sealed class BirthDate : IEquatable<BirthDate>
 {
     public DateTime Value { get; }
 
+    private BirthDate() { }
+
     public BirthDate(DateTime value)
     {
         if (value > DateTime.UtcNow)

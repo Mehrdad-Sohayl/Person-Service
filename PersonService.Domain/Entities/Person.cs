@@ -10,14 +10,17 @@ public class Person : BaseEntity
     public NationalCode NationalCode { get; private set; }
     public BirthDate BirthDate { get; private set; }
 
-    private Person() : base() { }
+    private Person() { }
 
-    internal Person(Name firstName,
-                    Name lastName,
-                    NationalCode nationalCode,
-                    BirthDate birthDate)
+    internal Person(
+        Guid? id,
+        Name firstName,
+        Name lastName,
+        NationalCode nationalCode,
+        BirthDate birthDate)
         : base()
     {
+        Id = id == null ? base.Id : id.Value;
         FirstName = firstName;
         LastName = lastName;
         NationalCode = nationalCode;

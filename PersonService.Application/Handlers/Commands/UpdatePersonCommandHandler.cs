@@ -17,10 +17,10 @@ public class UpdatePersonCommandHandler : IRequestHandler<UpdatePersonCommand, P
 
     public async Task<Person?> Handle(UpdatePersonCommand request, CancellationToken ct)
     {
-        var entity = PersonFactory.Create(
+        var entity = PersonFactory.CreateForUpdate(
+            request.Id,
             firstName: request.FirstName,
             lastName: request.LastName,
-            nationalCode: request.NationalCode,
             birthDate: request.BirthDate
             );
 
