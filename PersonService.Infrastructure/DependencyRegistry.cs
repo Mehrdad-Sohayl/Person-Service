@@ -1,6 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using PersonService.Domain.Entities;
 using PersonService.Domain.Interfaces.Repositories;
+using PersonService.Infrastructure.Data;
 using PersonService.Infrastructure.Repositories;
 
 namespace PersonService.Infrastructure;
@@ -23,6 +26,12 @@ public static class DependencyRegistry
                 services.AddTransient<TService, TImplementation>();
                 break;
         }
+    }
+
+    public static void AddDbContext(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddDbContext<PersonDbContext>(options =>
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
     }
 
     public static void AddWritePersonRepository(this IServiceCollection services, RepositoryLifeCycle lifeCycle) =>

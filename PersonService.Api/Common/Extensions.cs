@@ -5,8 +5,9 @@ namespace PersonService.Api.Common;
 
 public static class Extensions
 {
-    public static void SetupDI(this IServiceCollection services)
+    public static void SetupDI(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddDbContext(configuration);
         services.AddWritePersonRepository(RepositoryLifeCycle.Scoped);
         services.AddReadPersonRepository(RepositoryLifeCycle.Scoped);
 
