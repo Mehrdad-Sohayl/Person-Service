@@ -46,4 +46,4 @@ TestResults/
 
 # Local settings
 local.settings.json
-/PersonService.Api/Properties/launchSettings.json
+launchSettings.json
