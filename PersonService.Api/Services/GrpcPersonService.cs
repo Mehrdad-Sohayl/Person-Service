@@ -4,23 +4,25 @@ using MediatR;
 using PersonService.Api.Common;
 using PersonService.Application.Commands;
 using PersonService.Application.Queries;
+using PersonService.Contracts;
 using PersonService.Domain.Exceptions;
-using ProtoPerson = PersonService.Api.Person;
 
 namespace PersonService.Api.Services;
 
-public class GrpcPersonService : PersonService.PersonServiceBase
+public class GrpcPersonService : PersonCrudService.PersonCrudServiceBase
 {
     private readonly IMediator _mediator;
     private readonly ILogger<GrpcPersonService> _logger;
 
-    public GrpcPersonService(IMediator mediator, ILogger<GrpcPersonService> logger)
+    public GrpcPersonService(
+        IMediator mediator,
+        ILogger<GrpcPersonService> logger)
     {
         _mediator = mediator;
         _logger = logger;
     }
 
-    public override async Task<Person> Create(
+    public override async Task<PersonResponse> Create(
         CreatePersonRequest request,
         ServerCallContext context)
     {
@@ -28,10 +30,10 @@ public class GrpcPersonService : PersonService.PersonServiceBase
         {
 
             var command = new CreatePersonCommand(
-                firstName: request.Person.FirstName,
-                lastName: request.Person.LastName,
-                nationalCode: request.Person.NationalCode,
-                birthDate: request.Person.BirthDate.ToDateTime());
+                firstName: request.FirstName,
+                lastName: request.LastName,
+                nationalCode: request.NationalCode,
+                birthDate: request.BirthDate.ToDateTime().ToUniversalTime());
 
             var result = await _mediator.Send(command, context.CancellationToken);
 
@@ -51,10 +53,9 @@ public class GrpcPersonService : PersonService.PersonServiceBase
         }
     }
 
-    public override async Task<Person> GetById(
-        GetPersonByIdRequest request,
-        ServerCallContext context)
+    public async override Task<PersonResponse> GetById(GetPersonByIdRequest request, ServerCallContext context)
     {
+
         try
         {
             var query = new GetPersonByIdQuery(id: GrpcExtensions.ToGuidOrThrow(request.Id));
@@ -76,7 +77,7 @@ public class GrpcPersonService : PersonService.PersonServiceBase
         }
     }
 
-    public override async Task<Person> Update(
+    public override async Task<PersonResponse> Update(
         UpdatePersonRequest request,
         ServerCallContext context)
     {
@@ -86,8 +87,7 @@ public class GrpcPersonService : PersonService.PersonServiceBase
                 GrpcExtensions.ToGuidOrThrow(request.Person.Id),
                 request.Person.FirstName,
                 request.Person.LastName,
-                request.Person.NationalCode,
-                request.Person.BirthDate.ToDateTime()
+                request.Person.BirthDate.ToDateTime().ToUniversalTime()
             );
 
             var result = await _mediator.Send(command, context.CancellationToken);
@@ -113,7 +113,7 @@ public class GrpcPersonService : PersonService.PersonServiceBase
         }
     }
 
-    public override async Task<Empty> Delete(
+    public override async Task<Contracts.Empty> Delete(
         DeletePersonRequest request,
         ServerCallContext context)
     {
@@ -125,7 +125,7 @@ public class GrpcPersonService : PersonService.PersonServiceBase
             };
 
             await _mediator.Send(command, context.CancellationToken);
-            return new Empty();
+            return new Contracts.Empty();
         }
         catch (RpcException) { throw; }
         catch (Exception ex)
@@ -136,13 +136,12 @@ public class GrpcPersonService : PersonService.PersonServiceBase
         }
     }
 
-    private static ProtoPerson ToProto(Domain.Entities.Person entity) => new ProtoPerson
+    private static PersonResponse ToProto(Domain.Entities.Person entity) => new PersonResponse
     {
         Id = entity.Id.ToString(),
         FirstName = entity.FirstName.Value,
         LastName = entity.LastName.Value,
         NationalCode = entity.NationalCode.Value,
-        BirthDate = entity.BirthDate.Value.ToTimestamp()
+        BirthDate = new Timestamp { Seconds = entity.BirthDate.Value.ToUniversalTime().ToTimestamp().Seconds }
     };
 }
-
