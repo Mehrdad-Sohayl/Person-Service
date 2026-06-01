@@ -7,7 +7,8 @@ public abstract class BaseEntity
 {
     [Key]
     public Guid Id { get; protected set; }
-    public DateTime CreatedAt { get; protected set; }
+
+    public DateTime CreatedAt { get; protected set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; protected set; }
     public bool IsDeleted { get; protected set; } = false;
 
