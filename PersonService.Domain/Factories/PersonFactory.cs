@@ -1,7 +1,6 @@
 ﻿using PersonService.Domain.Entities;
 using PersonService.Domain.Exceptions;
 using PersonService.Domain.ValueObjects;
-
 namespace PersonService.Domain.Factories
 {
     public static class PersonFactory
@@ -13,7 +12,7 @@ namespace PersonService.Domain.Factories
             string nationalCode,
             DateTime birthDate)
         {
-            var errors = new List<string>();
+            var errors = new List<DomainError>();
 
             Name? _firstName = null;
             Name? _lastName = null;
@@ -21,19 +20,19 @@ namespace PersonService.Domain.Factories
             BirthDate? _birthDate = null;
 
             try { _firstName = new Name(firstName); }
-            catch (ArgumentException ex) { errors.Add($"FirstName: {ex.Message}"); }
+            catch (DomainValidationException ex) { errors.AddRange(ex.Errors); }
 
             try { _lastName = new Name(lastName); }
-            catch (ArgumentException ex) { errors.Add($"LastName: {ex.Message}"); }
+            catch (DomainValidationException ex) { errors.AddRange(ex.Errors); }
 
             try { _nationalCode = new NationalCode(nationalCode); }
-            catch (ArgumentException ex) { errors.Add($"NationalCode: {ex.Message}"); }
+            catch (DomainValidationException ex) { errors.AddRange(ex.Errors); }
 
             try { _birthDate = new BirthDate(birthDate); }
-            catch (ArgumentException ex) { errors.Add($"BirthDate: {ex.Message}"); }
+            catch (DomainValidationException ex) { errors.AddRange(ex.Errors); }
 
             if (errors.Any())
-                throw new DomainValidationException(errors);
+                throw new DomainValidationException(errors.ToList());
 
             return new Person(id, _firstName!, _lastName!, _nationalCode!, _birthDate!);
         }
@@ -44,26 +43,28 @@ namespace PersonService.Domain.Factories
             string lastName,
             DateTime birthDate)
         {
-            var errors = new List<string>();
+            var errors = new List<DomainError>();
 
             Name? _firstName = null;
             Name? _lastName = null;
-            NationalCode? _nationalCode = null;
             BirthDate? _birthDate = null;
+            NationalCode? _nationalCode = null;
+
 
             try { _firstName = new Name(firstName); }
-            catch (ArgumentException ex) { errors.Add($"FirstName: {ex.Message}"); }
+            catch (DomainValidationException ex) { errors.AddRange(ex.Errors); }
 
             try { _lastName = new Name(lastName); }
-            catch (ArgumentException ex) { errors.Add($"LastName: {ex.Message}"); }
+            catch (DomainValidationException ex) { errors.AddRange(ex.Errors); }
 
             try { _birthDate = new BirthDate(birthDate); }
-            catch (ArgumentException ex) { errors.Add($"BirthDate: {ex.Message}"); }
+            catch (DomainValidationException ex) { errors.AddRange(ex.Errors); }
 
             if (errors.Any())
-                throw new DomainValidationException(errors);
+                throw new DomainValidationException(errors.ToList());
 
             return new Person(id, _firstName!, _lastName!, _nationalCode!, _birthDate!);
         }
     }
 }
+

@@ -6,7 +6,10 @@ namespace PersonService.Client.Api.Services
     {
         Task<PersonResponse> CreatePersonAsync(CreatePersonRequest request);
         Task<PersonResponse> GetPersonByIdAsync(GetPersonByIdRequest request);
-        Task<PersonResponse> UpdatePersonAsync(UpdatePersonRequest request);
+        Task<PersonResponse> UpdateFirstNameAsync(UpdateFirstNameRequest request);
+        Task<PersonResponse> UpdateLastNameAsync(UpdateLastNameRequest request);
+        Task<PersonResponse> UpdateBirthDateAsync(UpdateBirthDateRequest request);
+
         Task DeletePersonAsync(DeletePersonRequest request);
     }
 }

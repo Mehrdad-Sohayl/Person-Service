@@ -13,22 +13,59 @@ namespace PersonService.Client.Api.Services
             _personGrpcClientService = personGrpcClientService;
         }
 
-        public async Task<Person> UpdateAsync(UpdatePersonApiRequest request)
+        public async Task<Person> UpdateFirstNameAsync(UpdatePersonApiRequest request)
         {
-            var person = new Person()
+            var grpcRequest = new UpdateFirstNameRequest
             {
                 Id = request.id,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                BirthDate = request.BirthDate.ToTimestamp(),
+                FirstName = request.FirstName
             };
 
-            var grpcRequest = new UpdatePersonRequest
+            var updatePersonResponse = await _personGrpcClientService.UpdateFirstNameAsync(grpcRequest);
+
+            var updatedPerson = new Person
             {
-                Person = person,
+                Id = updatePersonResponse.Id,
+                FirstName = updatePersonResponse.FirstName,
+                LastName = updatePersonResponse.LastName,
+                NationalCode = updatePersonResponse.NationalCode,
+                BirthDate = updatePersonResponse.BirthDate
             };
 
-            var updatePersonResponse = await _personGrpcClientService.UpdatePersonAsync(grpcRequest);
+            return updatedPerson;
+        }
+
+        public async Task<Person> UpdateLastNameAsync(UpdatePersonApiRequest request)
+        {
+            var grpcRequest = new UpdateLastNameRequest
+            {
+                Id = request.id,
+                LastName = request.LastName
+            };
+
+            var updatePersonResponse = await _personGrpcClientService.UpdateLastNameAsync(grpcRequest);
+
+            var updatedPerson = new Person
+            {
+                Id = updatePersonResponse.Id,
+                FirstName = updatePersonResponse.FirstName,
+                LastName = updatePersonResponse.LastName,
+                NationalCode = updatePersonResponse.NationalCode,
+                BirthDate = updatePersonResponse.BirthDate
+            };
+
+            return updatedPerson;
+        }
+
+        public async Task<Person> UpdateBirthDateAsync(UpdatePersonApiRequest request)
+        {
+            var grpcRequest = new UpdateBirthDateRequest
+            {
+                Id = request.id,
+                BirthDate = request.BirthDate!.Value.ToTimestamp()
+            };
+
+            var updatePersonResponse = await _personGrpcClientService.UpdateBirthDateAsync(grpcRequest);
 
             var updatedPerson = new Person
             {

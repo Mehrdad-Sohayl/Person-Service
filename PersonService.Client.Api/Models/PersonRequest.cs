@@ -1,5 +1,3 @@
-using PersonService.Contracts;
-
 namespace PersonService.Client.Api.Models;
 
 public record CreatePersonApiRequest(
@@ -10,6 +8,6 @@ public record CreatePersonApiRequest(
 
 public record UpdatePersonApiRequest(
     string id,
-    string FirstName,
-    string LastName,
-    DateTime BirthDate);
+    string? FirstName,
+    string? LastName,
+    DateTime? BirthDate);

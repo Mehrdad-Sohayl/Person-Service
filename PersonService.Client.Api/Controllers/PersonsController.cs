@@ -63,18 +63,60 @@ namespace PersonService.Client.Api.Controllers
         }
 
         /// <summary>
-        /// Updates a person
+        /// Updates a person's first name
         /// </summary>
         /// <param name="updatePersonApiRequest">The updated person data</param>
         /// <returns>The updated person</returns>
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Person>> Update([FromBody] UpdatePersonApiRequest updatePersonApiRequest)
+        public async Task<ActionResult<Person>> UpdateFirstName([FromBody] UpdatePersonApiRequest updatePersonApiRequest)
         {
             try
             {
-                var updatedPerson = await _updatePersonService.UpdateAsync(updatePersonApiRequest);
+                var updatedPerson = await _updatePersonService.UpdateFirstNameAsync(updatePersonApiRequest);
+                return Ok(updatedPerson);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Updates a person's last name
+        /// </summary>
+        /// <param name="updatePersonApiRequest">The updated person data</param>
+        /// <returns>The updated person</returns>
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Person>> UpdateLastName([FromBody] UpdatePersonApiRequest updatePersonApiRequest)
+        {
+            try
+            {
+                var updatedPerson = await _updatePersonService.UpdateLastNameAsync(updatePersonApiRequest);
+                return Ok(updatedPerson);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Updates a person's birth date
+        /// </summary>
+        /// <param name="updatePersonApiRequest">The updated person data</param>
+        /// <returns>The updated person</returns>
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Person>> UpdateBirthDate([FromBody] UpdatePersonApiRequest updatePersonApiRequest)
+        {
+            try
+            {
+                var updatedPerson = await _updatePersonService.UpdateBirthDateAsync(updatePersonApiRequest);
                 return Ok(updatedPerson);
             }
             catch (Exception ex)

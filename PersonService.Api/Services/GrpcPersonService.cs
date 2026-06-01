@@ -77,24 +77,90 @@ public class GrpcPersonService : PersonCrudService.PersonCrudServiceBase
         }
     }
 
-    public override async Task<PersonResponse> Update(
-        UpdatePersonRequest request,
+    public override async Task<PersonResponse> UpdateFirstName(
+        UpdateFirstNameRequest request,
         ServerCallContext context)
     {
         try
         {
-            var command = new UpdatePersonCommand(
-                GrpcExtensions.ToGuidOrThrow(request.Person.Id),
-                request.Person.FirstName,
-                request.Person.LastName,
-                request.Person.BirthDate.ToDateTime().ToUniversalTime()
+            var command = new UpdateFirstNameCommand(
+                GrpcExtensions.ToGuidOrThrow(request.Id),
+                request.FirstName
             );
 
             var result = await _mediator.Send(command, context.CancellationToken);
 
             if (result == null)
                 throw new RpcException(new Status(StatusCode.NotFound,
-                    $"Person with Id={request.Person.Id} not found"));
+                    $"Person with Id={request.Id} not found"));
+
+            return ToProto(result);
+        }
+        catch (DomainValidationException ex)
+        {
+            _logger.LogWarning(ex, "UpdatePerson validation failed");
+            throw new RpcException(new Status(StatusCode.InvalidArgument,
+                string.Join("; ", ex.Errors)));
+        }
+        catch (RpcException) { throw; }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error in UpdatePerson");
+            throw new RpcException(new Status(StatusCode.Internal,
+                "Internal server error"));
+        }
+    }
+
+        public override async Task<PersonResponse> UpdateLastName(
+        UpdateLastNameRequest request,
+        ServerCallContext context)
+    {
+        try
+        {
+            var command = new UpdateLastNameCommand(
+                GrpcExtensions.ToGuidOrThrow(request.Id),
+                request.LastName
+            );
+
+            var result = await _mediator.Send(command, context.CancellationToken);
+
+            if (result == null)
+                throw new RpcException(new Status(StatusCode.NotFound,
+                    $"Person with Id={request.Id} not found"));
+
+            return ToProto(result);
+        }
+        catch (DomainValidationException ex)
+        {
+            _logger.LogWarning(ex, "UpdatePerson validation failed");
+            throw new RpcException(new Status(StatusCode.InvalidArgument,
+                string.Join("; ", ex.Errors)));
+        }
+        catch (RpcException) { throw; }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error in UpdatePerson");
+            throw new RpcException(new Status(StatusCode.Internal,
+                "Internal server error"));
+        }
+    }
+
+        public override async Task<PersonResponse> UpdateBirthDate(
+        UpdateBirthDateRequest request,
+        ServerCallContext context)
+    {
+        try
+        {
+            var command = new UpdateBirthDateCommand(
+                GrpcExtensions.ToGuidOrThrow(request.Id),
+                request.BirthDate.ToDateTime().ToUniversalTime()
+            );
+
+            var result = await _mediator.Send(command, context.CancellationToken);
+
+            if (result == null)
+                throw new RpcException(new Status(StatusCode.NotFound,
+                    $"Person with Id={request.Id} not found"));
 
             return ToProto(result);
         }
