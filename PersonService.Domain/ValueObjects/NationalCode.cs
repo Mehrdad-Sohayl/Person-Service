@@ -10,7 +10,7 @@ public sealed class NationalCode : IEquatable<NationalCode>
 
     public NationalCode(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
+        if (string.IsNullOrWhiteSpace(value) || string.IsNullOrEmpty(value))
             throw new DomainValidationException(new DomainError(DomainErrorCodes.EmptyNationalCode, DomainErrorCodes.EmptyNationalCode));
         if (!System.Text.RegularExpressions.Regex.IsMatch(value, @"^\d{10}$"))
             throw new DomainValidationException(new DomainError(DomainErrorCodes.InvalidNationalCode, DomainErrorCodes.InvalidNationalCode));

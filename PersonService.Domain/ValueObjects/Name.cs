@@ -11,10 +11,10 @@ public sealed class Name : IEquatable<Name>
 
     public Name(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
+        if (string.IsNullOrWhiteSpace(value) || string.IsNullOrEmpty(value))
             throw new DomainValidationException(new DomainError(DomainErrorCodes.EmptyName, DomainErrorCodes.EmptyName));
 
-            if(value.Length> 20)
+        if (value.Length > 20)
             throw new DomainValidationException(new DomainError(DomainErrorCodes.NameLenght, DomainErrorCodes.NameLenght));
 
         Value = value;
