@@ -185,10 +185,7 @@ public class GrpcPersonService : PersonCrudService.PersonCrudServiceBase
     {
         try
         {
-            var command = new DeletePersonCommand
-            {
-                Id = GrpcExtensions.ToGuidOrThrow(request.Id)
-            };
+            var command = new DeletePersonCommand(GrpcExtensions.ToGuidOrThrow(request.Id));
 
             await _mediator.Send(command, context.CancellationToken);
             return new Contracts.Empty();
