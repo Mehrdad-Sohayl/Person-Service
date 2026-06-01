@@ -16,6 +16,9 @@ public class GetAllPersonsQueryHandler : IRequestHandler<GetAllPersonsQuery, IRe
 
     public async Task<IReadOnlyList<Person>> Handle(GetAllPersonsQuery request, CancellationToken ct)
     {
-        return await _readRepository.GetAllAsync(ct);
+        // Apply pagination
+        var skip = (request.PageNumber - 1) * request.PageSize;
+        return await _readRepository.GetPagedAsync(skip, request.PageSize, ct);
     }
 }
+

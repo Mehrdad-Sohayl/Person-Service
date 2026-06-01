@@ -34,4 +34,14 @@ internal class ReadPersonRepository : IReadRepository<Person>
             .AsNoTracking()
             .FirstOrDefaultAsync(p => p.Id == id, ct);
     }
+
+    public async Task<IReadOnlyList<Person>> GetPagedAsync(int skip, int take, CancellationToken ct = default)
+    {
+        return await _context.Persons
+            .AsNoTracking()
+            .Skip(skip)
+            .Take(take)
+            .ToListAsync(ct);
+    }
 }
+

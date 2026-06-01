@@ -1,4 +1,5 @@
-﻿using PersonService.Domain.Common;
+﻿
+using PersonService.Domain.Common;
 
 namespace PersonService.Domain.Interfaces.Repositories
 {
@@ -7,5 +8,7 @@ namespace PersonService.Domain.Interfaces.Repositories
         Task<T?> GetByIdAsync(Guid id, CancellationToken ct = default);
         Task<IReadOnlyList<T>> GetAllAsync(CancellationToken ct = default);
         Task<T?> FindByNationalCodeAsync(string nationalCode, CancellationToken ct = default);
+        Task<IReadOnlyList<T>> GetPagedAsync(int skip, int take, CancellationToken ct = default);
     }
 }
+
