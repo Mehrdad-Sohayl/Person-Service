@@ -1,4 +1,5 @@
-﻿using PersonService.Domain.Common;
+﻿using Domain.Events;
+using PersonService.Domain.Common;
 using PersonService.Domain.ValueObjects;
 
 namespace PersonService.Domain.Entities;
@@ -27,6 +28,28 @@ public class Person : BaseEntity
         BirthDate = birthDate;
     }
 
+    public void UpdateFirstName(Name firstName)
+    {
+        FirstName = firstName;
+        UpdatedAt = DateTime.UtcNow;
+
+        AddDomainEvent(new PersonUpdatedEvent(Id));
+    }
+
+    public void UpdateLastName(Name lastName)
+    {
+        LastName = lastName;
+        UpdatedAt = DateTime.UtcNow;
+        AddDomainEvent(new PersonUpdatedEvent(Id));
+    }
+
+    public void UpdateBirthDate(BirthDate birthDate)
+    {
+        BirthDate = birthDate;
+        UpdatedAt = DateTime.UtcNow;
+        AddDomainEvent(new PersonUpdatedEvent(Id));
+    }
+
     public void Update(Name firstName, Name lastName, BirthDate birthDate)
     {
         FirstName = firstName;
@@ -40,5 +63,7 @@ public class Person : BaseEntity
     {
         IsDeleted = true;
         UpdatedAt = DateTime.UtcNow;
+        AddDomainEvent(new PersonUpdatedEvent(Id));
     }
 }
+

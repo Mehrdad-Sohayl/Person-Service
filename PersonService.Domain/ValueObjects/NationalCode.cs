@@ -1,4 +1,6 @@
-﻿namespace PersonService.Domain.ValueObjects;
+﻿using PersonService.Domain.Exceptions;
+
+namespace PersonService.Domain.ValueObjects;
 
 public sealed class NationalCode : IEquatable<NationalCode>
 {
@@ -9,9 +11,9 @@ public sealed class NationalCode : IEquatable<NationalCode>
     public NationalCode(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("National code cannot be empty.", nameof(value));
+            throw new DomainValidationException(new DomainError(DomainErrorCodes.EmptyNationalCode, DomainErrorCodes.EmptyNationalCode));
         if (!System.Text.RegularExpressions.Regex.IsMatch(value, @"^\d{10}$"))
-            throw new ArgumentException("National code must be exactly 10 digits.", nameof(value));
+            throw new DomainValidationException(new DomainError(DomainErrorCodes.InvalidNationalCode, DomainErrorCodes.InvalidNationalCode));
 
         Value = value;
     }

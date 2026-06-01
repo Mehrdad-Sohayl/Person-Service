@@ -35,7 +35,7 @@ public static class DependencyRegistry
         services.AddService<IRequestHandler<DeletePersonCommand>, DeletePersonCommandHandler>(lifeCycle);
 
     public static void AddUpdatePersonCommandHandler(this IServiceCollection services, ApplicationLifeCycle lifeCycle) =>
-        services.AddService<IRequestHandler<UpdatePersonCommand, Person?>, UpdatePersonCommandHandler>(lifeCycle);
+        services.AddService<IRequestHandler<UpdateFirstNameCommand, Person?>, UpdateFirstNameCommandHandler>(lifeCycle);
 
     public static void AddFindPersonByNationalCodeQueryHandler(this IServiceCollection services, ApplicationLifeCycle lifeCycle) =>
         services.AddService<IRequestHandler<FindPersonByNationalCodeQuery, Person?>, FindPersonByNationalCodeQueryHandler>(lifeCycle);

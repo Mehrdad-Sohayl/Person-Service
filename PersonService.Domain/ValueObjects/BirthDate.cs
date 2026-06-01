@@ -1,4 +1,6 @@
-﻿namespace PersonService.Domain.ValueObjects;
+﻿using PersonService.Domain.Exceptions;
+
+namespace PersonService.Domain.ValueObjects;
 
 public sealed class BirthDate : IEquatable<BirthDate>
 {
@@ -9,7 +11,7 @@ public sealed class BirthDate : IEquatable<BirthDate>
     public BirthDate(DateTime value)
     {
         if (value > DateTime.UtcNow)
-            throw new ArgumentException("Birth date cannot be in the future.", nameof(value));
+            throw new DomainValidationException(new DomainError(DomainErrorCodes.InvalidBirthDate, DomainErrorCodes.InvalidBirthDate));
 
         Value = value;
     }

@@ -1,4 +1,6 @@
-﻿namespace PersonService.Domain.ValueObjects;
+﻿using PersonService.Domain.Exceptions;
+
+namespace PersonService.Domain.ValueObjects;
 
 public sealed class Name : IEquatable<Name>
 {
@@ -6,10 +8,14 @@ public sealed class Name : IEquatable<Name>
 
     private Name() { }
 
+
     public Name(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Name cannot be empty.", nameof(value));
+            throw new DomainValidationException(new DomainError(DomainErrorCodes.EmptyName, DomainErrorCodes.EmptyName));
+
+            if(value.Length> 20)
+            throw new DomainValidationException(new DomainError(DomainErrorCodes.NameLenght, DomainErrorCodes.NameLenght));
 
         Value = value;
     }

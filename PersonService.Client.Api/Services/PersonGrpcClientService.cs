@@ -1,11 +1,3 @@
-//using PersonService.Client.Api.Models;
-//using Grpc.Net.Client;
-//using System.Threading.Tasks;
-//using Google.Protobuf;
-//using System;
-//using System.Globalization;
-
-using PersonService.Client.Api.Models;
 using PersonService.Contracts;
 
 namespace PersonService.Client.Api.Services;
@@ -34,8 +26,18 @@ public class PersonGrpcClientService : IPersonGrpcClientService
         return _client.GetById(request);
     }
 
-    public async Task<PersonResponse> UpdatePersonAsync(UpdatePersonRequest request)
+    public async Task<PersonResponse> UpdateBirthDateAsync(UpdateBirthDateRequest request)
     {
-        return _client.Update(request);
+       return _client.UpdateBirthDate(request);
+    }
+
+    public async Task<PersonResponse> UpdateFirstNameAsync(UpdateFirstNameRequest request)
+    {
+       return _client.UpdateFirstName(request);
+    }
+
+    public async Task<PersonResponse> UpdateLastNameAsync(UpdateLastNameRequest request)
+    {
+       return _client.UpdateLastName(request);
     }
 }
