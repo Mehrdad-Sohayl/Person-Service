@@ -31,6 +31,7 @@ internal class WritePersonRepository : IWriteRepository<Person>
 
         try
         {
+            _context.Persons.Update(existing);
             await _context.SaveChangesAsync(ct);
             return true;
         }
@@ -43,16 +44,15 @@ internal class WritePersonRepository : IWriteRepository<Person>
     public async Task<Person?> UpdateAsync(Person entity, CancellationToken ct = default)
     {
         if (entity == null) throw new ArgumentNullException(nameof(entity));
-
         var existing = await _context.Persons.FindAsync(new object[] { entity.Id }, ct);
         if (existing == null) return null;
 
-        existing.Update(entity.FirstName, entity.LastName, entity.BirthDate);
+        var result = _context.Persons.Update(entity);
 
         try
         {
             await _context.SaveChangesAsync(ct);
-            return existing;
+            return result.Entity;
         }
         catch (DbUpdateConcurrencyException ex)
         {
