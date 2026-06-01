@@ -50,15 +50,6 @@ public class Person : BaseEntity
         AddDomainEvent(new PersonUpdatedEvent(Id));
     }
 
-    public void Update(Name firstName, Name lastName, BirthDate birthDate)
-    {
-        FirstName = firstName;
-        LastName = lastName;
-        BirthDate = birthDate;
-
-        UpdatedAt = DateTime.UtcNow;
-    }
-
     public void MarkDeleted()
     {
         IsDeleted = true;
