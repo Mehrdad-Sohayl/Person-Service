@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using PersonService.Application.Commands;
+using PersonService.Application.Common;
 using PersonService.Application.Handlers.Commands;
 using PersonService.Application.Handlers.Queries;
 using PersonService.Application.Queries;
@@ -41,7 +42,7 @@ public static class DependencyRegistry
         services.AddService<IRequestHandler<FindPersonByNationalCodeQuery, Person?>, FindPersonByNationalCodeQueryHandler>(lifeCycle);
 
     public static void AddGetAllPersonsQueryHandler(this IServiceCollection services, ApplicationLifeCycle lifeCycle) =>
-        services.AddService<IRequestHandler<GetAllPersonsQuery, IReadOnlyList<Person>>, GetAllPersonsQueryHandler>(lifeCycle);
+        services.AddService<IRequestHandler<GetAllPersonsQuery, PagedResult<Person>>, GetAllPersonsQueryHandler>(lifeCycle);
 
     public static void AddGetPersonByIdQueryHandler(this IServiceCollection services, ApplicationLifeCycle lifeCycle) =>
         services.AddService<IRequestHandler<GetPersonByIdQuery, Person?>, GetPersonByIdQueryHandler>(lifeCycle);

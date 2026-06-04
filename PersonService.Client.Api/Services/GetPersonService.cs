@@ -32,5 +32,31 @@ namespace PersonService.Client.Api.Services
 
             return person;
         }
+
+        public async Task<PagedResult<List<Person>>> GetAllAsync(GetAllPersonsApiRequest request)
+        {
+            var grpcRequest = new GetAllPersonsRequest
+            {
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize
+            };
+
+            var allPersonResponse = await _personGrpcClientService.GetAllPersonsAsync(grpcRequest);
+
+            var person = new PagedResult<List<Person>>
+            {
+                Value = allPersonResponse.Persons.Select(p => new Person
+                {
+                    Id = p.Id,
+                    FirstName = p.FirstName,
+                    LastName = p.LastName,
+                    NationalCode = p.NationalCode,
+                    BirthDate = p.BirthDate
+                }).ToList(),
+                TotalCount = allPersonResponse.TotalCount
+            };
+
+            return person;
+        }
     }
 }

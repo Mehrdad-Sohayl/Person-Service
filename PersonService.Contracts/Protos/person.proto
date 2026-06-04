@@ -25,6 +25,11 @@ message UpdateLastNameRequest {string id = 1; string last_name = 2; }
 message UpdateBirthDateRequest {string id = 1; google.protobuf.Timestamp birth_date = 2; }
 message DeletePersonRequest { string id = 1; }
 
+message GetAllPersonsRequest {
+  int32 page_number = 1;
+  int32 page_size = 2;
+}
+
 message Empty {}
 
 message PersonResponse {
@@ -35,9 +40,15 @@ message PersonResponse {
 	google.protobuf.Timestamp birth_date = 5;
 }
 
+message GetAllPersonsResponse {
+  repeated PersonResponse persons = 1;
+  int32 total_count = 2;
+}
+
 service PersonCrudService {
   rpc Create(CreatePersonRequest) returns (PersonResponse);
   rpc GetById(GetPersonByIdRequest) returns (PersonResponse);
+  rpc GetAll(GetAllPersonsRequest) returns (GetAllPersonsResponse);
   rpc UpdateFirstName(UpdateFirstNameRequest) returns (PersonResponse);
   rpc UpdateLastName(UpdateLastNameRequest) returns (PersonResponse);
   rpc UpdateBirthDate(UpdateBirthDateRequest) returns (PersonResponse);
