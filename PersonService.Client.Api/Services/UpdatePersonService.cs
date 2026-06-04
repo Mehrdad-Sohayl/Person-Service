@@ -17,7 +17,7 @@ namespace PersonService.Client.Api.Services
         {
             var grpcRequest = new UpdateFirstNameRequest
             {
-                Id = request.id,
+                Id = request.Id,
                 FirstName = request.FirstName
             };
 
@@ -39,7 +39,7 @@ namespace PersonService.Client.Api.Services
         {
             var grpcRequest = new UpdateLastNameRequest
             {
-                Id = request.id,
+                Id = request.Id,
                 LastName = request.LastName
             };
 
@@ -61,7 +61,7 @@ namespace PersonService.Client.Api.Services
         {
             var grpcRequest = new UpdateBirthDateRequest
             {
-                Id = request.id,
+                Id = request.Id,
                 BirthDate = request.BirthDate!.Value.ToTimestamp()
             };
 
