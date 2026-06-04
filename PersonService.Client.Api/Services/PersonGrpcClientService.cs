@@ -26,18 +26,23 @@ public class PersonGrpcClientService : IPersonGrpcClientService
         return _client.GetById(request);
     }
 
+    public async Task<GetAllPersonsResponse> GetAllPersonsAsync(GetAllPersonsRequest request)
+    {
+        return _client.GetAll(request);
+    }
+
     public async Task<PersonResponse> UpdateBirthDateAsync(UpdateBirthDateRequest request)
     {
-       return _client.UpdateBirthDate(request);
+        return _client.UpdateBirthDate(request);
     }
 
     public async Task<PersonResponse> UpdateFirstNameAsync(UpdateFirstNameRequest request)
     {
-       return _client.UpdateFirstName(request);
+        return _client.UpdateFirstName(request);
     }
 
     public async Task<PersonResponse> UpdateLastNameAsync(UpdateLastNameRequest request)
     {
-       return _client.UpdateLastName(request);
+        return _client.UpdateLastName(request);
     }
 }

@@ -1,11 +1,12 @@
 ﻿using MediatR;
+using PersonService.Application.Common;
 using PersonService.Application.Queries;
 using PersonService.Domain.Entities;
 using PersonService.Domain.Interfaces.Repositories;
 
 namespace PersonService.Application.Handlers.Queries;
 
-public class GetAllPersonsQueryHandler : IRequestHandler<GetAllPersonsQuery, IReadOnlyList<Person>>
+public class GetAllPersonsQueryHandler : IRequestHandler<GetAllPersonsQuery, PagedResult<Person>>
 {
     private readonly IReadRepository<Person> _readRepository;
 
@@ -14,11 +15,12 @@ public class GetAllPersonsQueryHandler : IRequestHandler<GetAllPersonsQuery, IRe
         _readRepository = readRepository;
     }
 
-    public async Task<IReadOnlyList<Person>> Handle(GetAllPersonsQuery request, CancellationToken ct)
+    public async Task<PagedResult<Person>> Handle(GetAllPersonsQuery request, CancellationToken ct)
     {
         // Apply pagination
         var skip = (request.PageNumber - 1) * request.PageSize;
-        return await _readRepository.GetPagedAsync(skip, request.PageSize, ct);
+        var persons = await _readRepository.GetPagedAsync(skip, request.PageSize, ct);
+        return new PagedResult<Person>(persons, persons.Count);
     }
 }
 

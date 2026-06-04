@@ -38,7 +38,10 @@ namespace PersonService.Client.Api.Controllers
         public async Task<ActionResult<PersonResponse>> Create([FromBody] CreatePersonApiRequest createPersonApiRequest)
         {
             var createdPerson = await _createPersonService.CreateAsync(createPersonApiRequest);
-            return Ok(createdPerson);
+            if (createdPerson == null)
+                return BadRequest(createPersonApiRequest);
+
+            return StatusCode(StatusCodes.Status201Created, createdPerson);
         }
 
         /// <summary>
@@ -63,11 +66,34 @@ namespace PersonService.Client.Api.Controllers
         }
 
         /// <summary>
+        /// Gets list of persons
+        /// </summary>
+        /// <param name="request">Page number and page size</param>
+        /// <returns>List of persons</returns>
+        [HttpGet()]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<PagedResult<List<Person>>>> GetAll([FromQuery] GetAllPersonsApiRequest request)
+        {
+            try
+            {
+                var person = await _getPersonService.GetAllAsync(request);
+                return Ok(person);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+
+
+        /// <summary>
         /// Updates a person's first name
         /// </summary>
         /// <param name="updatePersonApiRequest">The updated person data</param>
         /// <returns>The updated person</returns>
-        [HttpPut]
+        [HttpPut("FirstName")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Person>> UpdateFirstName([FromBody] UpdatePersonApiRequest updatePersonApiRequest)
@@ -88,7 +114,7 @@ namespace PersonService.Client.Api.Controllers
         /// </summary>
         /// <param name="updatePersonApiRequest">The updated person data</param>
         /// <returns>The updated person</returns>
-        [HttpPut]
+        [HttpPut("LastName")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Person>> UpdateLastName([FromBody] UpdatePersonApiRequest updatePersonApiRequest)
@@ -109,7 +135,7 @@ namespace PersonService.Client.Api.Controllers
         /// </summary>
         /// <param name="updatePersonApiRequest">The updated person data</param>
         /// <returns>The updated person</returns>
-        [HttpPut]
+        [HttpPut("BirthDate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Person>> UpdateBirthDate([FromBody] UpdatePersonApiRequest updatePersonApiRequest)

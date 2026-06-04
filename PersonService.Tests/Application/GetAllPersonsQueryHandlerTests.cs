@@ -1,14 +1,11 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Moq;
 using PersonService.Application.Handlers.Queries;
 using PersonService.Application.Queries;
 using PersonService.Domain.Entities;
 using PersonService.Domain.Interfaces.Repositories;
 using FluentAssertions;
-using Xunit;
 using PersonService.Domain.Factories;
+using PersonService.Application.Common;
 
 namespace PersonService.Tests.Application
 {
@@ -29,7 +26,17 @@ namespace PersonService.Tests.Application
             var pageNumber = 3;
             var pageSize = 10;
             var skipExpected = (pageNumber - 1) * pageSize;
-            var persons = new[] { PersonFactory.Create(Guid.NewGuid(), "A", "B", "1234567890", DateTime.Today) };
+            var persons = new List<Person>()
+            {
+                PersonFactory.Create(Guid.NewGuid(), "A", "B", "1234567890", DateTime.UtcNow),
+                PersonFactory.Create(Guid.NewGuid(), "C", "D", "0123456789", DateTime.UtcNow),
+                PersonFactory.Create(Guid.NewGuid(), "E", "F", "0912345678", DateTime.UtcNow)
+            };
+
+            var pagedResult = new PagedResult<Person>(
+                Items: persons,
+                TotalCount: persons.Count()
+            );
 
             _repoMock.Setup(r => r.GetPagedAsync(skipExpected, pageSize, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(persons);
@@ -38,7 +45,7 @@ namespace PersonService.Tests.Application
             var result = await _handler.Handle(new GetAllPersonsQuery(pageNumber, pageSize), CancellationToken.None);
 
             // Assert
-            result.Should().BeEquivalentTo(persons);
+            result.Should().BeEquivalentTo(pagedResult);
             _repoMock.Verify(r => r.GetPagedAsync(skipExpected, pageSize, It.IsAny<CancellationToken>()), Times.Once);
         }
 
@@ -54,7 +61,7 @@ namespace PersonService.Tests.Application
             var result = await _handler.Handle(new GetAllPersonsQuery(1, 5), CancellationToken.None);
 
             // Assert
-            result.Should().BeEmpty();
+            result.Items.Should().BeEmpty();
         }
     }
 }

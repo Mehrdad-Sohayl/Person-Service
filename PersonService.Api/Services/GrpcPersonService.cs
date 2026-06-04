@@ -77,6 +77,32 @@ public class GrpcPersonService : PersonCrudService.PersonCrudServiceBase
         }
     }
 
+    public override async Task<GetAllPersonsResponse> GetAll(
+        GetAllPersonsRequest request,
+        ServerCallContext context)
+    {
+        var persons = await _mediator.Send(
+            new GetAllPersonsQuery(
+                request.PageNumber,
+                request.PageSize),
+            context.CancellationToken);
+
+        var response = new GetAllPersonsResponse();
+
+        response.Persons.AddRange(
+            persons.Items.Select(x => new PersonResponse
+            {
+                Id = x.Id.ToString(),
+                FirstName = x.FirstName.Value,
+                LastName = x.LastName.Value,
+                NationalCode = x.NationalCode.Value,
+                BirthDate = Timestamp.FromDateTime(
+                    x.BirthDate.Value.ToUniversalTime())
+            }));
+
+        return response;
+    }
+
     public override async Task<PersonResponse> UpdateFirstName(
         UpdateFirstNameRequest request,
         ServerCallContext context)
@@ -111,9 +137,9 @@ public class GrpcPersonService : PersonCrudService.PersonCrudServiceBase
         }
     }
 
-        public override async Task<PersonResponse> UpdateLastName(
-        UpdateLastNameRequest request,
-        ServerCallContext context)
+    public override async Task<PersonResponse> UpdateLastName(
+    UpdateLastNameRequest request,
+    ServerCallContext context)
     {
         try
         {
@@ -145,9 +171,9 @@ public class GrpcPersonService : PersonCrudService.PersonCrudServiceBase
         }
     }
 
-        public override async Task<PersonResponse> UpdateBirthDate(
-        UpdateBirthDateRequest request,
-        ServerCallContext context)
+    public override async Task<PersonResponse> UpdateBirthDate(
+    UpdateBirthDateRequest request,
+    ServerCallContext context)
     {
         try
         {

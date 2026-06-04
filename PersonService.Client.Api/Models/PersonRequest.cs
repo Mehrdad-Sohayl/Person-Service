@@ -7,7 +7,9 @@ public record CreatePersonApiRequest(
     DateTime BirthDate);
 
 public record UpdatePersonApiRequest(
-    string id,
+    string Id,
     string? FirstName,
     string? LastName,
     DateTime? BirthDate);
+
+public record GetAllPersonsApiRequest(int PageNumber, int PageSize);
