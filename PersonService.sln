@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonService.Client.Api", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonService.Tests", "PersonService.Tests\PersonService.Tests.csproj", "{27D71432-3939-4E8C-B96B-A2CA65E190C0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonService.IntegrationTests", "PersonService.IntegrationTests\PersonService.IntegrationTests.csproj", "{9281EA2C-F9CF-42E4-8E0A-0DFD0072286E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,18 @@ Global
 		{27D71432-3939-4E8C-B96B-A2CA65E190C0}.Release|x64.Build.0 = Release|Any CPU
 		{27D71432-3939-4E8C-B96B-A2CA65E190C0}.Release|x86.ActiveCfg = Release|Any CPU
 		{27D71432-3939-4E8C-B96B-A2CA65E190C0}.Release|x86.Build.0 = Release|Any CPU
+		{9281EA2C-F9CF-42E4-8E0A-0DFD0072286E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9281EA2C-F9CF-42E4-8E0A-0DFD0072286E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9281EA2C-F9CF-42E4-8E0A-0DFD0072286E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9281EA2C-F9CF-42E4-8E0A-0DFD0072286E}.Debug|x64.Build.0 = Debug|Any CPU
+		{9281EA2C-F9CF-42E4-8E0A-0DFD0072286E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9281EA2C-F9CF-42E4-8E0A-0DFD0072286E}.Debug|x86.Build.0 = Debug|Any CPU
+		{9281EA2C-F9CF-42E4-8E0A-0DFD0072286E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9281EA2C-F9CF-42E4-8E0A-0DFD0072286E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9281EA2C-F9CF-42E4-8E0A-0DFD0072286E}.Release|x64.ActiveCfg = Release|Any CPU
+		{9281EA2C-F9CF-42E4-8E0A-0DFD0072286E}.Release|x64.Build.0 = Release|Any CPU
+		{9281EA2C-F9CF-42E4-8E0A-0DFD0072286E}.Release|x86.ActiveCfg = Release|Any CPU
+		{9281EA2C-F9CF-42E4-8E0A-0DFD0072286E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
