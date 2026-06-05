@@ -214,6 +214,8 @@ Focus on:
 * End-to-end request flow
 * Database interactions
 
+* **End-to-End flow is under construction!**
+
 FluentValidation is used within integration test scenarios to validate request expectations.
 
 ---
@@ -280,7 +282,7 @@ dotnet run
 
 | Technology            | Purpose                     |
 | --------------------- | --------------------------- |
-| .NET 6                | Application Platform        |
+| .NET 9                | Application Platform        |
 | ASP.NET Core          | Hosting                     |
 | gRPC                  | Service Communication       |
 | MediatR               | CQRS Implementation         |
