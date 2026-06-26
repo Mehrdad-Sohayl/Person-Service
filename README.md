@@ -1,308 +1,307 @@
-# 👤 PersonService
+# PersonService
 
-A sample microservice for managing person information using **gRPC**, **CQRS**, **MediatR**, and **Clean Architecture** in **.NET 6**.
+A microservice for managing person information built with **gRPC**, **CQRS**, **MediatR**, and **Clean Architecture** on **.NET 10.0**.
 
----
+## Overview
 
-## 🚀 Overview
+PersonService provides CRUD operations for managing people through a gRPC backend with a REST API facade. The solution follows Clean Architecture principles, separating domain logic from infrastructure concerns.
 
-**PersonService** is a microservice that provides CRUD operations for managing people through gRPC endpoints.
+### Key Features
 
-The solution follows **Clean Architecture** principles and separates responsibilities into dedicated layers:
+- **Clean Architecture** with proper dependency flow across all layers
+- **CQRS** pattern via MediatR for command/query separation
+- **Domain-Driven Design** with validated value objects and domain events
+- **gRPC** backend for high-performance inter-service communication
+- **REST API** facade (BFF pattern) for HTTP clients
+- **Soft-delete** with global query filters
+- **Optimistic concurrency** via row versioning
+- **Docker** support with docker-compose orchestration
 
-* 🎯 **Domain** – Entities, Value Objects, Domain Events
-* ⚙️ **Application** – Commands, Queries, Handlers, Business Use Cases
-* 🗄️ **Infrastructure** – EF Core, SQL Server, Repositories, Migrations
-* 🌐 **API** – gRPC Server
-* 🔄 **Client API** – REST-to-gRPC Adapter
-* 📜 **Contracts** – Shared gRPC contracts and `.proto` definitions
+## Architecture
 
----
-
-## 🏛️ Architecture
-
-```text
-┌──────────────────────────┐
-│ PersonService.Client.Api │
-│      (REST API)          │
-└────────────┬─────────────┘
-             │
-             │ gRPC
-             ▼
-┌──────────────────────────┐
-│     PersonService.Api    │
-│      (gRPC Server)       │
-└────────────┬─────────────┘
-             │
-             ▼
-┌──────────────────────────┐
-│ PersonService.Application│
-│      (CQRS + MediatR)    │
-└────────────┬─────────────┘
-             │
-             ▼
-┌──────────────────────────┐
-│   PersonService.Domain   │
-└────────────┬─────────────┘
-             │
-             ▼
-┌──────────────────────────┐
-│PersonService.Infrastructure│
-│    (EF Core + SQL Server) │
-└──────────────────────────┘
+```
+┌─────────────────────────────────┐
+│   PersonService.Client.Api      │
+│      (REST API :8080)           │
+└──────────────┬──────────────────┘
+               │ gRPC
+               ▼
+┌─────────────────────────────────┐
+│      PersonService.Api          │
+│     (gRPC Server :5001)         │
+└──────────────┬──────────────────┘
+               │
+               ▼
+┌─────────────────────────────────┐
+│  PersonService.Application      │
+│    (CQRS + MediatR)             │
+└──────────────┬──────────────────┘
+               │
+               ▼
+┌─────────────────────────────────┐
+│     PersonService.Domain        │
+│  (Entities, Value Objects,      │
+│   Domain Events)                │
+└──────────────┬──────────────────┘
+               │
+               ▼
+┌─────────────────────────────────┐
+│  PersonService.Infrastructure   │
+│  (EF Core, SQL Server,          │
+│   Repositories)                 │
+└─────────────────────────────────┘
 ```
 
----
+## Project Structure
 
-## 📂 Solution Structure
-
-```text
+```
 src/
-├── PersonService.Api
-├── PersonService.Client.Api
-├── PersonService.Application
-├── PersonService.Domain
-├── PersonService.Infrastructure
-└── PersonService.Contracts
-
-tests/
-├── PersonService.UnitTests
-└── PersonService.IntegrationTests
+├── PersonService.Api/                  # gRPC server
+│   ├── Common/                         # Interceptors, extensions
+│   ├── Services/                       # gRPC service implementations
+│   └── Program.cs
+├── PersonService.Client.Api/           # REST API facade
+│   ├── Controllers/                    # API controllers
+│   ├── Services/                       # gRPC client services
+│   ├── Models/                         # Request/response models
+│   └── Program.cs
+├── PersonService.Application/          # Business logic layer
+│   ├── Commands/                       # CQRS commands
+│   ├── Queries/                        # CQRS queries
+│   ├── Handlers/                       # Command/query handlers
+│   ├── Exceptions/                     # Application exceptions
+│   └── Common/                         # Shared types (PagedResult)
+├── PersonService.Domain/               # Core domain layer
+│   ├── Entities/                       # Domain entities
+│   ├── ValueObjects/                   # Validated value objects
+│   ├── Events/                         # Domain events
+│   ├── Exceptions/                     # Domain exceptions
+│   ├── Factories/                      # Entity factories
+│   ├── Interfaces/                     # Repository interfaces
+│   └── Common/                         # BaseEntity
+├── PersonService.Infrastructure/       # Data access layer
+│   ├── Data/                           # DbContext
+│   ├── Repositories/                   # Repository implementations
+│   └── Migrations/                     # EF Core migrations
+├── PersonService.Contracts/            # Shared gRPC contracts
+│   └── Protos/                         # Protocol Buffer definitions
+├── PersonService.Tests/                # Unit tests
+│   ├── Domain/                         # Domain layer tests
+│   └── Application/                    # Handler tests
+├── PersonService.IntegrationTests/     # Integration tests
+│   ├── Api/                            # API endpoint tests
+│   └── Common/                         # Test infrastructure
+├── docker-compose.yml
+├── NuGet.config
+└── PersonService.sln
 ```
 
----
+## Technologies
 
-## 🧩 Domain Layer
+| Technology | Version | Purpose |
+|---|---|---|
+| .NET | 10.0-preview | Application platform |
+| ASP.NET Core | 10.0-preview | Web hosting |
+| gRPC | 2.80 | Service communication |
+| MediatR | 14.1.0 | CQRS implementation |
+| Entity Framework Core | 9.0.15 | Data access |
+| SQL Server | 2022 | Database |
+| xUnit | 2.9.3 | Unit testing |
+| FluentAssertions | 8.10.0 | Test assertions |
+| Moq | 4.20.72 | Test mocking |
+| Polly | 8.6.6 | Resilience policies |
 
-The Domain layer contains the core business model of the application.
+## Getting Started
 
-### Features
+### Prerequisites
 
-* ✅ Entities
-* ✅ Value Objects
-* ✅ Domain Events
-* ✅ Base Entity abstraction
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) (preview)
+- [Docker](https://www.docker.com/products/docker-desktop/) (for containerized setup)
+- SQL Server (for local development without Docker)
 
-Domain Events are collected within the base entity and can be raised by domain objects when state changes occur.
-
-Example concepts:
-
-* Person
-* NationalCode
-* Domain Events related to Person lifecycle operations
-
----
-
-## ⚡ Application Layer
-
-The Application layer implements the **CQRS** pattern using **MediatR**.
-
-### Commands
-
-* CreatePersonCommand
-* UpdatePersonCommand
-* DeletePersonCommand
-
-### Queries
-
-* GetPersonByIdQuery
-* GetAllPersonsQuery
-
-### Handlers
-
-Each command and query is processed through a dedicated handler.
-
-```text
-Controller / gRPC Service
-        ↓
-     MediatR
-        ↓
- Handler
-        ↓
- Repository
-```
-
----
-
-## 🗄️ Infrastructure Layer
-
-Infrastructure provides persistence and external integrations.
-
-### Technologies
-
-* Entity Framework Core
-* SQL Server
-* Repository Pattern
-* EF Core Migrations
-
-### Repository Separation
-
-The project follows a read/write repository separation:
-
-```text
-Read Repository
-Write Repository
-```
-
-This aligns with the CQRS architecture used in the Application layer.
-
----
-
-## 🌐 gRPC API
-
-The main service is exposed through gRPC.
-
-Protocol definitions are maintained in:
-
-```text
-PersonService.Contracts
-```
-
-using:
-
-```text
-person.proto
-```
-
-### Supported Operations
-
-| Operation     | Description                |
-| ------------- | -------------------------- |
-| CreatePerson  | Creates a new person       |
-| GetPersonById | Retrieves a person by ID   |
-| GetAllPersons | Retrieves all persons      |
-| UpdatePerson  | Updates an existing person |
-| DeletePerson  | Deletes a person           |
-
----
-
-## 🔄 Client API
-
-The solution contains a separate REST API project that acts as a bridge between REST clients and the gRPC service.
-
-```text
-REST Client
-     ↓
-PersonService.Client.Api
-     ↓
-gRPC
-     ↓
-PersonService.Api
-```
-
-This allows consumers that do not support gRPC to interact with the system through standard HTTP APIs.
-
----
-
-## 🧪 Testing
-
-The solution includes automated tests written with **xUnit**.
-
-### Unit Tests
-
-Focus on:
-
-* Domain behavior
-* Application handlers
-* Business rules
-
-### Integration Tests
-
-Focus on:
-
-* API behavior
-* End-to-end request flow
-* Database interactions
-
-* **End-to-End flow is under construction!**
-
-FluentValidation is used within integration test scenarios to validate request expectations.
-
----
-
-## ⚙️ Configuration
-
-The application uses standard `.NET` configuration files.
-
-### API Configuration
-
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "..."
-  }
-}
-```
-
-### Default gRPC Endpoint
-
-```text
-https://localhost:5001
-```
-
-Configuration typically includes:
-
-* Database connection string
-* Logging settings
-* gRPC endpoint settings
-
----
-
-## 🛠️ Build & Run
-
-### Restore Packages
+### Option 1: Docker (Recommended)
 
 ```bash
-dotnet restore
+cd src
+docker compose up --build
 ```
 
-### Build Solution
+This starts:
+- **SQL Server** on `localhost:1433`
+- **gRPC API** on `localhost:5001`
+- **REST API** on `localhost:8080`
+
+### Option 2: Local Development
+
+1. Set up the database connection:
 
 ```bash
-dotnet build
+cd src/PersonService.Api
+dotnet user-secrets init
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost,1433;Database=PersonServiceDb;User Id=sa;Password=YourPassword;Encrypt=false;"
 ```
 
-### Run gRPC Server
+2. Start SQL Server (or use Docker for just the database):
+
+```bash
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=YourPassword" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
+```
+
+3. Apply database migrations:
+
+```bash
+cd src
+dotnet ef database update --project PersonService.Infrastructure --startup-project PersonService.Api
+```
+
+4. Start the gRPC server:
 
 ```bash
 cd src/PersonService.Api
 dotnet run
 ```
 
-### Run REST Client API
+5. Start the REST API:
 
 ```bash
 cd src/PersonService.Client.Api
 dotnet run
 ```
 
----
+## API Endpoints
 
-## 📚 Technologies
+### REST API (Client.Api)
 
-| Technology            | Purpose                     |
-| --------------------- | --------------------------- |
-| .NET 9                | Application Platform        |
-| ASP.NET Core          | Hosting                     |
-| gRPC                  | Service Communication       |
-| MediatR               | CQRS Implementation         |
-| Entity Framework Core | Data Access                 |
-| SQL Server            | Database                    |
-| xUnit                 | Testing                     |
-| FluentValidation      | Validation (Test Scenarios) |
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/persons` | Create a new person |
+| `GET` | `/api/persons/{id}` | Get person by ID |
+| `GET` | `/api/persons?pageNumber=1&pageSize=50` | Get paginated list |
+| `PUT` | `/api/persons/FirstName` | Update first name |
+| `PUT` | `/api/persons/LastName` | Update last name |
+| `PUT` | `/api/persons/BirthDate` | Update birth date |
+| `DELETE` | `/api/persons/{id}` | Delete a person |
 
----
+### gRPC Service
 
-## 📌 Notes
+| Method | Description |
+|---|---|
+| `Create` | Create a new person |
+| `GetById` | Get person by ID |
+| `GetAll` | Get paginated list |
+| `UpdateFirstName` | Update first name |
+| `UpdateLastName` | Update last name |
+| `UpdateBirthDate` | Update birth date |
+| `Delete` | Delete a person |
 
-* The solution follows Clean Architecture principles.
-* CQRS is implemented using MediatR.
-* Domain Events are supported and stored within entities.
-* gRPC contracts are maintained separately in the Contracts project.
-* Database schema changes are managed through EF Core migrations.
+### Example: Create a Person
 
----
+```bash
+curl -X POST http://localhost:8080/api/persons \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstName": "John",
+    "lastName": "Doe",
+    "nationalCode": "1234567890",
+    "birthDate": "1990-01-15T00:00:00"
+  }'
+```
 
-## 📄 License
+## Domain Model
+
+### Person Entity
+
+The core entity with validated value objects:
+
+- **FirstName** (`Name`) — Max 20 characters, non-empty
+- **LastName** (`Name`) — Max 20 characters, non-empty
+- **NationalCode** (`NationalCode`) — Exactly 10 digits
+- **BirthDate** (`BirthDate`) — Cannot be in the future
+
+### Value Objects
+
+Each value object enforces invariants at construction time:
+
+```csharp
+var name = new Name("John");           // Valid
+var name = new Name("");               // Throws DomainValidationException
+var code = new NationalCode("1234567890"); // Valid
+var code = new NationalCode("12345");  // Throws DomainValidationException
+```
+
+### Domain Events
+
+Events are raised on entity mutations and collected in the base entity:
+
+```csharp
+person.UpdateFirstName(new Name("Jane"));
+// Raises PersonUpdatedEvent
+```
+
+## Configuration
+
+### Environment Variables
+
+| Variable | Description | Default |
+|---|---|---|
+| `ASPNETCORE_ENVIRONMENT` | Runtime environment | `Production` |
+| `ConnectionStrings__DefaultConnection` | SQL Server connection string | — |
+| `GrpcSettings__PersonServiceUrl` | gRPC server URL | `https://localhost:5001` |
+| `GrpcSettings__TimeoutSeconds` | gRPC call timeout | `10` |
+| `USE_HTTPS` | Enable HTTPS on gRPC server | `false` |
+
+### Docker Configuration
+
+The `docker-compose.yml` configures:
+
+- SQL Server with health checks
+- gRPC API with database connection
+- REST API with gRPC client settings
+- Volume persistence for database data
+
+## Testing
+
+### Run Unit Tests
+
+```bash
+dotnet test PersonService.Tests
+```
+
+### Run Integration Tests
+
+```bash
+dotnet test PersonService.IntegrationTests
+```
+
+### Test Coverage
+
+- **Domain tests**: Value object validation, entity behavior, factory patterns
+- **Application tests**: Command/query handler logic, repository mocking
+- **Integration tests**: API endpoints with mocked gRPC client via `WebApplicationFactory`
+
+## Development
+
+### Adding Migrations
+
+```bash
+dotnet ef migrations add <MigrationName> \
+  --project PersonService.Infrastructure \
+  --startup-project PersonService.Api
+```
+
+### Build
+
+```bash
+dotnet build PersonService.sln
+```
+
+### Clean Build
+
+```bash
+dotnet clean PersonService.sln
+dotnet build PersonService.sln
+```
+
+## License
 
 This project is provided for educational and demonstration purposes.
