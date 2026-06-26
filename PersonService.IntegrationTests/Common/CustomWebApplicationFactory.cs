@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
+using PersonService.Client.Api;
 using PersonService.Client.Api.Services;
 
 namespace PersonService.IntegrationTests;

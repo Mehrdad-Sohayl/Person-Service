@@ -4,52 +4,53 @@ using PersonService.Contracts;
 using Polly;
 using Polly.Extensions.Http;
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-var builder = WebApplication.CreateBuilder(args);
+namespace PersonService.Client.Api;
 
-builder.Services.AddOpenApi();
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var url = builder.Configuration["GrpcSettings:PersonServiceUrl"] ?? throw new InvalidOperationException("GrpcSettings:PersonServiceUrl is required");
-var timeoutSecondsStr = builder.Configuration["GrpcSettings:TimeoutSeconds"] ?? "10";
-if (!int.TryParse(timeoutSecondsStr, out var timeoutSeconds))
-    timeoutSeconds = 10;
-builder.Services.AddGrpcClient<PersonCrudService.PersonCrudServiceClient>(options =>
+public class Program
 {
-    options.Address = new Uri(url);
-})
-.ConfigurePrimaryHttpMessageHandler(() =>
-{
-    return new SocketsHttpHandler
+    public static void Main(string[] args)
     {
-        ConnectTimeout = TimeSpan.FromSeconds(timeoutSeconds)
-    };
-})
-.AddPolicyHandler(GrpcPolicies.GetRetryPolicy())
-.AddPolicyHandler(GrpcPolicies.GetCircuitBreakerPolicy());
+        var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<IPersonGrpcClientService, PersonGrpcClientService>();
-builder.Services.AddScoped<CreatePersonService>();
-builder.Services.AddScoped<UpdatePersonService>();
-builder.Services.AddScoped<DeletePersonService>();
-builder.Services.AddScoped<GetPersonService>();
+        builder.Services.AddOpenApi();
+        builder.Services.AddControllers();
 
-var app = builder.Build();
+        var url = builder.Configuration["GrpcSettings:PersonServiceUrl"] ?? throw new InvalidOperationException("GrpcSettings:PersonServiceUrl is required");
+        var timeoutSecondsStr = builder.Configuration["GrpcSettings:TimeoutSeconds"] ?? "10";
+        if (!int.TryParse(timeoutSecondsStr, out var timeoutSeconds))
+            timeoutSeconds = 10;
+        builder.Services.AddGrpcClient<PersonCrudService.PersonCrudServiceClient>(options =>
+        {
+            options.Address = new Uri(url);
+        })
+        .ConfigurePrimaryHttpMessageHandler(() =>
+        {
+            return new SocketsHttpHandler
+            {
+                ConnectTimeout = TimeSpan.FromSeconds(timeoutSeconds)
+            };
+        })
+        .AddPolicyHandler(GrpcPolicies.GetRetryPolicy())
+        .AddPolicyHandler(GrpcPolicies.GetCircuitBreakerPolicy());
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.UseSwagger();
-    app.UseSwaggerUI();
+        builder.Services.AddSingleton<IPersonGrpcClientService, PersonGrpcClientService>();
+        builder.Services.AddScoped<CreatePersonService>();
+        builder.Services.AddScoped<UpdatePersonService>();
+        builder.Services.AddScoped<DeletePersonService>();
+        builder.Services.AddScoped<GetPersonService>();
+
+        var app = builder.Build();
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.MapOpenApi();
+        }
+
+        app.UseHttpsRedirection();
+
+        app.UseAuthorization();
+
+        app.MapControllers();
+        app.Run();
+    }
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-app.Run();
-
