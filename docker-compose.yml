@@ -1,0 +1,47 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "YourStrong!Passw0rd"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "YourStrong!Passw0rd" -Q "SELECT 1" -C -l 5 || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  personservice-api:
+    build:
+      context: .
+      dockerfile: PersonService.Api/Dockerfile
+      network: host
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=PersonServiceDb;User Id=sa;Password=YourStrong!Passw0rd;Encrypt=false;TrustServerCertificate=true;"
+    ports:
+      - "5001:5001"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+  personservice-client-api:
+    build:
+      context: .
+      dockerfile: PersonService.Client.Api/Dockerfile
+      network: host
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      GrpcSettings__PersonServiceUrl: "http://personservice-api:5001"
+      GrpcSettings__TimeoutSeconds: "15"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - personservice-api
+
+volumes:
+  sqlserver-data:

@@ -21,10 +21,15 @@ public class Program
 
         builder.WebHost.ConfigureKestrel(options =>
         {
-            options.ListenAnyIP(5001, listenOptions =>
+            var useHttps = Environment.GetEnvironmentVariable("USE_HTTPS");
+            if (useHttps == "true")
             {
-                listenOptions.UseHttps();
-            });
+                options.ListenAnyIP(5001, listenOptions => listenOptions.UseHttps());
+            }
+            else
+            {
+                options.ListenAnyIP(5001);
+            }
         });
 
         builder.Services
